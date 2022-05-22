@@ -3,6 +3,8 @@
 > simple k8s implement which inspired by original k8s
 > 最简 k8s 实现，由 k8s 的第一个 commit 改造而来
 
+## 概述
+
 k8s 是目前云原生领域的事实标准，得益于google精巧的设计，k8s几乎满足所有云原生场景，  
 但却给初学者带来了巨大的门槛，本着最小系统学习方法论，我们从最开始的 commit 出发，看看一个最精巧的k8s是如何设计与实现的。
 
@@ -11,6 +13,10 @@ k8s 实现精巧复杂，是 golang 领域的集大成者，学好它不仅对�
 希望每个接触 k8s 的人都能收获满满。
 
 我的[学习笔记](./docs/notes.md).
+
+## 架构
+
+![架构图](./docs/simplek8s.png)
 
 ## 参考资料
 

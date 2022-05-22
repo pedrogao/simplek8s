@@ -5,6 +5,8 @@
 
 [README中文](./README_ZH.md)
 
+## Abstract
+
 k8s is the current de facto standard in the cloud-native field.   
 Thanks to Google's ingenious design, k8s can meet almost all cloud-native scenarios, but it brings a huge threshold for
 beginners.
@@ -19,6 +21,10 @@ but also can better understand the current business scenarios such as cloud comp
 I hope everyone who comes into contact with k8s can gain a lot.
 
 This is my [study notes](./docs/notes.md) in Chinese.
+
+## Architecture
+
+![architecture](./docs/simplek8s.png)
 
 ## references
 

@@ -38,6 +38,22 @@ cd etcd-v2.0.9-linux-amd64
 
 ```sh
 make
+
+# 运行控制管理器(调度器)
+./cmd/controller-manager/controller-manager -etcd_servers http://localhost:4001 -master http://localhost:8080
+
+# 运行 apiserver
+./cmd/apiserver/apiserver -etcd_servers http://localhost:4001 -machines 127.0.0.1
+
+# 运行容器管理器，创建、运行、销毁容器
+./cmd/kubelet/kubelet -etcd_servers http://localhost:4001
+
+# 运行代理服务
+./cmd/proxy/proxy -etcd_servers http://localhost:4001
+
+# 运行 api 控制客户端
+./cmd/cloudcfg/cloudcfg -h http://127.0.0.1:8080 -c ./frontend.json create /task
+./cmd/cloudcfg/cloudcfg -h http://127.0.0.1:8080 get /tasks
 ```
 
 ## 概念

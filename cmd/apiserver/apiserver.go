@@ -79,7 +79,7 @@ func main() {
 		// 任务存储多了一个调度器，负责调度任务，将选择合适的机器去执行任务
 		"tasks": registry.MakeTaskRegistryStorage(taskRegistry, containerInfo,
 			registry.MakeFirstFitScheduler(machineList, taskRegistry)),                       // 任务存储
-		"replicationControllers": registry.MakeControllerRegistryStorage(controllerRegistry), // 备份存储
+		"replicationControllers": registry.MakeControllerRegistryStorage(controllerRegistry), // 控制器存储
 		"services":               registry.MakeServiceRegistryStorage(serviceRegistry),       // 服务存储
 	}
 	// 服务、任务
