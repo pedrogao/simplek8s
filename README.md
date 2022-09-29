@@ -26,6 +26,36 @@ This is my [study notes](./docs/notes.md) in Chinese.
 
 ![architecture](./docs/simplek8s.png)
 
+## setup
+
+```sh
+./scripts/etcd2.sh
+./third_party/etcd-download-test/etcd
+make build 
+./cmd/integration/integration
+```
+
+you will see:
+
+```
+2022/09/29 18:00:58 Creating etcd client pointing to [http://localhost:4001]
+2022/09/29 18:00:58 API Server started on http://127.0.0.1:45599
+2022/09/29 18:00:58 Synchronizing php
+2022/09/29 18:00:58 GET /api/v1beta1/tasks
+.....
+2022/09/29 18:01:08 Too many replicas, deleting
+2022/09/29 18:01:08 DELETE /api/v1beta1/tasks/7aaadc5700bf1d9a
+2022/09/29 18:01:08 DELETE /api/v1beta1/tasks/53663980e406eccf
+2022/09/29 18:01:08 Synchronizing nginxController
+2022/09/29 18:01:08 GET /api/v1beta1/tasks?labels=name%3Dnginx
+2022/09/29 18:01:08 []api.Task(nil)
+2022/09/29 18:01:08 Too few replicas, creating 2
+2022/09/29 18:01:08 POST /api/v1beta1/tasks
+2022/09/29 18:01:08 POST /api/v1beta1/tasks
+2022/09/29 18:01:18 GET /api/v1beta1/tasks
+2022/09/29 18:01:18 OK
+```
+
 ## references
 
 - [kubernetes](https://github.com/kubernetes/kubernetes)

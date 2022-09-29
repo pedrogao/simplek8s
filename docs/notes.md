@@ -2,7 +2,7 @@
 
 ## first commit
 
-切到 first commit：
+切到 [first commit](https://github.com/kubernetes/kubernetes/commit/2c4b3a562ce34cddc3f8218a2c4d11c7310e6d56)：
 
 ```sh
 $ git log --reverse

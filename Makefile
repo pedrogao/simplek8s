@@ -1,5 +1,8 @@
 .PHONY: build clean
 
+etcd:
+	@bash ./scripts/etcd2.sh
+
 build:
 	@echo "build start"
 	@cd cmd/apiserver && go build -o apiserver && cd ..
@@ -11,9 +14,12 @@ build:
 	@echo "build done"
 
 clean:
-	@rm cmd/apiserver/apiserver
+	@rm cmd/apiserver/apiserver || true
 	@rm cmd/kubectl/kubectl
-	@rm cmd/controller-manager/controller-manager
-	@rm cmd/integration/integration
-	@rm cmd/kubelet/kubelet
-	@rm cmd/proxy/proxy
+	@rm cmd/controller-manager/controller-manager || true
+	@rm cmd/integration/integration || true
+	@rm cmd/kubelet/kubelet || true
+	@rm cmd/proxy/proxy || true
+
+integration-test: build
+	@cd cmd/integration && ./integration

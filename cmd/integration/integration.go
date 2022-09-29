@@ -39,38 +39,38 @@ func main() {
 	log.Printf("Creating etcd client pointing to %v", servers)
 	etcdClient := etcd.NewClient(servers)
 	machineList := []string{"machine"}
-
+	// ectd 注册组件
 	reg := registry.MakeEtcdRegistry(etcdClient, machineList)
-
+	// apiserver
 	apiserver := apiserver.New(
 		map[string]apiserver.RESTStorage{
 			"tasks": registry.MakeTaskRegistryStorage(reg, &kubeclient.FakeContainerInfo{},
-				registry.MakeRoundRobinScheduler(machineList)),
-			"replicationControllers": registry.MakeControllerRegistryStorage(reg),
+				registry.MakeRoundRobinScheduler(machineList)), // 任务，后面改为 pod
+			"replicationControllers": registry.MakeControllerRegistryStorage(reg), // 控制器
 		},
-		"/api/v1beta1",
+		"/api/v1beta1", // URL 路径
 	)
 	server := httptest.NewServer(apiserver)
-
+	// 控制管理器
 	controllerManager := registry.MakeReplicationManager(
 		etcd.NewClient(servers),
 		kubeclient.Client{
 			Host: server.URL,
 		},
 	)
-
-	go controllerManager.Synchronize()
-	go controllerManager.WatchControllers()
+	go controllerManager.Synchronize()      // 同步元数据
+	go controllerManager.WatchControllers() // 监听控制器
 
 	// Ok. we're good to go.
 	log.Printf("API Server started on %s", server.URL)
 	// Wait for the synchronization threads to come up.
 	time.Sleep(time.Second * 10)
 
+	// 开启客户端请求是否成功
 	kubeClient := kubeclient.Client{
 		Host: server.URL,
 	}
-	data, err := ioutil.ReadFile("api/examples/controller.json")
+	data, err := ioutil.ReadFile("docs/controller.json")
 	if err != nil {
 		log.Fatalf("Unexpected error: %#v", err)
 	}
