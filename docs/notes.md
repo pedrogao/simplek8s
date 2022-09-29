@@ -52,15 +52,15 @@ make
 ./cmd/proxy/proxy -etcd_servers http://localhost:4001
 
 # 运行 api 控制客户端
-./cmd/cloudcfg/cloudcfg -h http://127.0.0.1:8080 -c ./frontend.json create /task
-./cmd/cloudcfg/cloudcfg -h http://127.0.0.1:8080 get /tasks
+./cmd/kubectl/kubectl -h http://127.0.0.1:8080 -c ./frontend.json create /task
+./cmd/kubectl/kubectl -h http://127.0.0.1:8080 get /tasks
 ```
 
 ## 概念
 
 - Manifest：表现
 - apiserver：服务
-- cloudcfg：cli，操作 apiserver，后面更名为 kubectl
+- kubectl：cli，操作 apiserver，后面更名为 kubectl
 - controller-manager：管理器，调度器，比如容器复制、备份等
 - kubelet：操作 docker 等容器
 - proxy：代理服务

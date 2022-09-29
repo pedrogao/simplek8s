@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,26 +25,28 @@ import (
 	"time"
 
 	kubeclient "github.com/pedrogao/simplek8s/pkg/client"
-	"github.com/pedrogao/simplek8s/pkg/cloudcfg"
+	"github.com/pedrogao/simplek8s/pkg/kubectl"
 )
 
 const AppVersion = "0.1"
 
 // The flag package provides a default help printer via -h switch
-var versionFlag = flag.Bool("v", false, "Print the version number.")
-var httpServer = flag.String("h", "", "The host to connect to.")
-var config = flag.String("c", "", "Path to the config file.")
-var labelQuery = flag.String("l", "", "Label query to use for listing")
-var updatePeriod = flag.Duration("u", 60*time.Second, "Update interarrival in seconds")
-var portSpec = flag.String("p", "", "The port spec, comma-separated list of <external>:<internal>,...")
-var servicePort = flag.Int("s", -1, "If positive, create and run a corresponding service on this port, only used with 'run'")
-var authConfig = flag.String("auth", os.Getenv("HOME")+"/.kubernetes_auth", "Path to the auth info file.  If missing, prompt the user")
+var (
+	versionFlag  = flag.Bool("v", false, "Print the version number.")
+	httpServer   = flag.String("h", "", "The host to connect to.")
+	config       = flag.String("c", "", "Path to the config file.")
+	labelQuery   = flag.String("l", "", "Label query to use for listing")
+	updatePeriod = flag.Duration("u", 60*time.Second, "Update interarrival in seconds")
+	portSpec     = flag.String("p", "", "The port spec, comma-separated list of <external>:<internal>,...")
+	servicePort  = flag.Int("s", -1, "If positive, create and run a corresponding service on this port, only used with 'run'")
+	authConfig   = flag.String("auth", os.Getenv("HOME")+"/.kubernetes_auth", "Path to the auth info file.  If missing, prompt the user")
+)
 
 func usage() {
-	log.Fatal("Usage: cloudcfg -h <host> [-c config/file.json] [-p <hostPort>:<containerPort>,..., <hostPort-n>:<containerPort-n> <method> <path>")
+	log.Fatal("Usage: kubectl -h <host> [-c config/file.json] [-p <hostPort>:<containerPort>,..., <hostPort-n>:<containerPort-n> <method> <path>")
 }
 
-// CloudCfg command line tool.
+// Kubectl command line tool.
 func main() {
 	flag.Parse() // Scan the arguments list
 
@@ -61,7 +63,7 @@ func main() {
 	var request *http.Request
 	var err error
 
-	auth, err := cloudcfg.LoadAuthInfo(*authConfig) // 加载姓名、密码
+	auth, err := kubectl.LoadAuthInfo(*authConfig) // 加载姓名、密码
 	if err != nil {
 		log.Fatalf("Error loading auth: %#v", err)
 	}
@@ -74,19 +76,19 @@ func main() {
 	} else if method == "delete" {
 		request, err = http.NewRequest("DELETE", url, nil)
 	} else if method == "create" {
-		request, err = cloudcfg.RequestWithBody(*config, url, "POST")
+		request, err = kubectl.RequestWithBody(*config, url, "POST")
 	} else if method == "update" {
-		request, err = cloudcfg.RequestWithBody(*config, url, "PUT")
+		request, err = kubectl.RequestWithBody(*config, url, "PUT")
 	} else if method == "rollingupdate" {
 		client := &kubeclient.Client{
 			Host: *httpServer,
 			Auth: &auth,
 		}
-		cloudcfg.Update(flag.Arg(1), client, *updatePeriod)
+		kubectl.Update(flag.Arg(1), client, *updatePeriod)
 	} else if method == "run" {
 		args := flag.Args()
 		if len(args) < 4 {
-			log.Fatal("usage: cloudcfg -h <host> run <image> <replicas> <name>")
+			log.Fatal("usage: kubectl -h <host> run <image> <replicas> <name>")
 		}
 		image := args[1]
 		replicas, err := strconv.Atoi(args[2]) // 备份数量
@@ -94,19 +96,19 @@ func main() {
 		if err != nil {
 			log.Fatalf("Error parsing replicas: %#v", err)
 		}
-		err = cloudcfg.RunController(image, name, replicas, kubeclient.Client{Host: *httpServer, Auth: &auth}, *portSpec, *servicePort)
+		err = kubectl.RunController(image, name, replicas, kubeclient.Client{Host: *httpServer, Auth: &auth}, *portSpec, *servicePort)
 		if err != nil {
 			log.Fatalf("Error: %#v", err)
 		}
 		return
 	} else if method == "stop" {
-		err = cloudcfg.StopController(flag.Arg(1), kubeclient.Client{Host: *httpServer, Auth: &auth})
+		err = kubectl.StopController(flag.Arg(1), kubeclient.Client{Host: *httpServer, Auth: &auth})
 		if err != nil {
 			log.Fatalf("Error: %#v", err)
 		}
 		return
 	} else if method == "rm" {
-		err = cloudcfg.DeleteController(flag.Arg(1), kubeclient.Client{Host: *httpServer, Auth: &auth})
+		err = kubectl.DeleteController(flag.Arg(1), kubeclient.Client{Host: *httpServer, Auth: &auth})
 		if err != nil {
 			log.Fatalf("Error: %#v", err)
 		}
@@ -118,7 +120,7 @@ func main() {
 		log.Fatalf("Error: %#v", err)
 	}
 	var body string
-	body, err = cloudcfg.DoRequest(request, auth.User, auth.Password)
+	body, err = kubectl.DoRequest(request, auth.User, auth.Password)
 	if err != nil {
 		log.Fatalf("Error: %#v", err)
 	}
