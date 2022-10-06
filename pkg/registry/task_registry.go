@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@ package registry
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/url"
 
 	. "github.com/pedrogao/simplek8s/pkg/api"
@@ -108,6 +109,7 @@ func (storage *TaskRegistryStorage) Create(task interface{}) error {
 	if len(taskObj.ID) == 0 {
 		return fmt.Errorf("ID is unspecified: %#v", task)
 	}
+	log.Printf("schedule task: %v", taskObj)
 	machine, err := storage.scheduler.Schedule(taskObj)
 	if err != nil {
 		return err

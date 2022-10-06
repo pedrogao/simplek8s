@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -64,6 +64,7 @@ func (r RealTaskControl) createReplica(controllerSpec ReplicationController) {
 		DesiredState: controllerSpec.DesiredState.TaskTemplate.DesiredState,
 		Labels:       controllerSpec.DesiredState.TaskTemplate.Labels,
 	}
+	log.Printf("creare task: %v", task)
 	_, err := r.kubeClient.CreateTask(task) // 注册一个新的任务
 	if err != nil {
 		log.Printf("%#v\n", err)
@@ -142,7 +143,7 @@ func (rm *ReplicationManager) syncReplicationController(controllerSpec Replicati
 	}
 	filteredList := rm.filterActiveTasks(taskList.Items)
 	diff := len(filteredList) - controllerSpec.DesiredState.Replicas
-	log.Printf("%#v", filteredList)
+	// log.Printf("filtered: %#v", filteredList)
 	if diff < 0 {
 		diff *= -1
 		log.Printf("Too few replicas, creating %d\n", diff)

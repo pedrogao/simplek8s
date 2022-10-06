@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -163,7 +163,11 @@ func (registry *EtcdRegistry) runTask(task Task, machine string) error {
 	if err != nil {
 		return err
 	}
+	// 此处创建源数据
 	_, err = registry.etcdClient.Create(key, string(data), 0)
+	if err != nil {
+		return err
+	}
 
 	manifest, err := registry.manifestFactory.MakeManifest(machine, task)
 	if err != nil {
