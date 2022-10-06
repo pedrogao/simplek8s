@@ -54,6 +54,7 @@ make
 # 运行 api 控制客户端
 ./cmd/kubectl/kubectl -h http://127.0.0.1:8080 -c ./frontend.json create /task
 ./cmd/kubectl/kubectl -h http://127.0.0.1:8080 get /tasks
+./cmd/kubectl/kubectl -h http://127.0.0.1:8080 run nginx 2 nginx-group
 ```
 
 ## 概念

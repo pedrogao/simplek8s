@@ -23,3 +23,11 @@ clean:
 
 integration-test: build
 	@cd cmd/integration && ./integration
+
+local-run: build
+	@echo "run in local"
+	@./third_party/etcd-download-test/etcd
+	@./cmd/apiserver/apiserver -etcd_servers http://localhost:4001 -machines machine
+	@./cmd/controller-manager/controller-manager -etcd_servers http://localhost:4001 -master http://localhost:8080
+	@./cmd/kubelet/kubelet -etcd_servers http://localhost:4001
+	@./cmd/proxy/proxy -etcd_servers http://localhost:4001
